@@ -1,7 +1,7 @@
 function Home() {
     return (
         <div className="container">
-            <h1>Xinha é linda e cheirosa :)</h1>
+            <h1>teste</h1>
 
             <style jsx>{`
         .container {
