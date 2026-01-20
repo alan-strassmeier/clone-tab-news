@@ -1,9 +1,9 @@
 function Home() {
-    return (
-        <div className="container">
-            <h1>teste</h1>
+  return (
+    <div className="container">
+      <h1>teste</h1>
 
-            <style jsx>{`
+      <style jsx>{`
         .container {
           height: 100vh;
           display: flex;
@@ -15,8 +15,8 @@ function Home() {
           color: red;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default Home;
