@@ -16,7 +16,6 @@ async function status(req, res) {
   })
   const databaseOpenedConnectionsValue = databaseOpenedConnectionsResult.rows[0].count
 
-
   res.status(200).json({
     updated_at: updatedAt,
     dependencies: {
