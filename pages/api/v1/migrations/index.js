@@ -4,37 +4,48 @@ import database from "infra/database";
 import db from 'node-pg-migrate/dist/db';
 
 export default async function migrations(req, res) {
-  const dbClient = await database.getNewClient();
-
-  const defaultMigrationsOptions = {
-    dbClient: dbClient,
-    dryRun: true,
-    dir: join('infra', 'migrations'),
-    direction: 'up',
-    verbose: true,
-    migrationsTable: 'pgmigrations',
-  }
-  if (req.method === 'GET') {
-    const pendingMigrations = await migrationRunner(defaultMigrationsOptions)
-
-    await dbClient.end();
-
-    res.status(200).json(pendingMigrations);
+  const allowedMethods = ['GET', 'POST'];
+  if (!allowedMethods.includes(req.method)) {
+    res.setHeader('Allow', allowedMethods);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  if (req.method === 'POST') {
-    const migratedMigrations = await migrationRunner({
-      ...defaultMigrationsOptions,
-      dryRun: false,
-    })
+  let dbClient;
 
-    await dbClient.end();
+  try {
+    const dbClient = await database.getNewClient();
 
-    if (migratedMigrations.length > 0) {
-      res.status(201).json(migratedMigrations);
+    const defaultMigrationsOptions = {
+      dbClient: dbClient,
+      dryRun: true,
+      dir: join('infra', 'migrations'),
+      direction: 'up',
+      verbose: true,
+      migrationsTable: 'pgmigrations',
     }
-    res.status(200).json(migratedMigrations);
-  }
+    if (req.method === 'GET') {
+      const pendingMigrations = await migrationRunner(defaultMigrationsOptions)
 
-  return res.status(405).end(); // Method Not Allowed 
+      res.status(200).json(pendingMigrations);
+    }
+
+    if (req.method === 'POST') {
+      const migratedMigrations = await migrationRunner({
+        ...defaultMigrationsOptions,
+        dryRun: false,
+      })
+
+      if (migratedMigrations.length > 0) {
+        res.status(201).json(migratedMigrations);
+      }
+      res.status(200).json(migratedMigrations);
+    }
+
+    return res.status(405).end(); // Method Not Allowed 
+  } catch (error) {
+    console.error('Migration error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    await db.end();
+  }
 }
