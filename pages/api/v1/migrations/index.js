@@ -13,7 +13,7 @@ export default async function migrations(req, res) {
   let dbClient;
 
   try {
-    const dbClient = await database.getNewClient();
+    dbClient = await database.getNewClient();
 
     const defaultMigrationsOptions = {
       dbClient: dbClient,
