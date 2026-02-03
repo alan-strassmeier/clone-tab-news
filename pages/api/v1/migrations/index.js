@@ -40,12 +40,12 @@ export default async function migrations(req, res) {
       }
       res.status(200).json(migratedMigrations);
     }
-
-    return res.status(405).end(); // Method Not Allowed 
   } catch (error) {
     console.error('Migration error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    await db.end();
+    if (dbClient) {
+      await dbClient.end();
+    }
   }
 }
