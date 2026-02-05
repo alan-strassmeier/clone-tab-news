@@ -1,7 +1,6 @@
 import migrationRunner from 'node-pg-migrate';
 import { join } from 'path';
 import database from "infra/database";
-import db from 'node-pg-migrate/dist/db';
 
 export default async function migrations(req, res) {
   const allowedMethods = ['GET', 'POST'];
@@ -11,10 +10,8 @@ export default async function migrations(req, res) {
   }
 
   let dbClient;
-
   try {
     dbClient = await database.getNewClient();
-
     const defaultMigrationsOptions = {
       dbClient: dbClient,
       dryRun: true,
@@ -23,10 +20,10 @@ export default async function migrations(req, res) {
       verbose: true,
       migrationsTable: 'pgmigrations',
     }
+
     if (req.method === 'GET') {
       const pendingMigrations = await migrationRunner(defaultMigrationsOptions)
-
-      res.status(200).json(pendingMigrations);
+      return res.status(200).json(pendingMigrations);
     }
 
     if (req.method === 'POST') {
@@ -35,14 +32,15 @@ export default async function migrations(req, res) {
         dryRun: false,
       })
 
+      // Fixed: Only one response based on condition
       if (migratedMigrations.length > 0) {
-        res.status(201).json(migratedMigrations);
+        return res.status(201).json(migratedMigrations);
       }
-      res.status(200).json(migratedMigrations);
+      return res.status(200).json(migratedMigrations);
     }
   } catch (error) {
     console.error('Migration error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     if (dbClient) {
       await dbClient.end();
