@@ -1,0 +1,17 @@
+name: Autometed Tests
+on: pul_requwest
+
+jobs:
+  jest:
+    name:Jest Unbuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      -use: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: npm ci
+      
+      - run: npm test
