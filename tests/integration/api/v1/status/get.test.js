@@ -5,7 +5,7 @@ beforeAll(async () => {
 });
 
 test("GEt to api/v1/status returns status 200 and correct body", async () => {
-  const response = await fetch("http://localhost:3000/api/v1/status")
+  const response = await fetch("http://localhost:3000/api/v1/status");
   expect(response.status).toBe(200);
 
   const responseBody = await response.json();
@@ -13,8 +13,7 @@ test("GEt to api/v1/status returns status 200 and correct body", async () => {
   const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
   expect(parsedUpdatedAt).toEqual(responseBody.updated_at);
 
-  expect(responseBody.dependencies.database.version).toEqual("16.0")
+  expect(responseBody.dependencies.database.version).toEqual("16.0");
   expect(responseBody.dependencies.database.max_connections).toEqual(100);
   expect(responseBody.dependencies.database.opened_connections).toEqual(1);
-
 });

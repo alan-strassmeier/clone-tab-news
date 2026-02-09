@@ -22,14 +22,14 @@ function checkPostgresConnection() {
     }
     if (tentativasRealizadas >= MAX_TENTATIVAS) {
       console.error(
-        `❌ Timeout: Postgres não ficou disponível após ${MAX_TENTATIVAS} tentativas`
+        `❌ Timeout: Postgres não ficou disponível após ${MAX_TENTATIVAS} tentativas`,
       );
       console.error("Última resposta:", stdout || stderr || "sem resposta");
       process.exit(1);
       return;
     }
     console.log(
-      `⏳ Aguardando Postgres ficar disponível... (tentativa ${tentativasRealizadas}/${MAX_TENTATIVAS})`
+      `⏳ Aguardando Postgres ficar disponível... (tentativa ${tentativasRealizadas}/${MAX_TENTATIVAS})`,
     );
     setTimeout(checkPostgresConnection, 2000);
   }
