@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:up && npm run services:wait:database && npm run migrate:up && next dev",
-    "postdev": "npm run services:stop",
+    "dev": "node infra/scripts/dev.js",
     "test:watch": "jest --watchAll --runInBand",
     "test": "npm run services:up &&  concurrently -n \"next,jest\" --hide next -k -s command-jest \"next dev\" \"jest --runInBand\" ",
     "services:up": "docker compose -f infra/compose.yaml up -d",
