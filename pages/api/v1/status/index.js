@@ -8,7 +8,9 @@ async function status(req, res) {
     const databaseVersion = await database.query("SHOW server_version;");
     const databaseVersionValue = databaseVersion.rows[0].server_version;
 
-    const databaseMaxConnections = await database.query("SHOW max_connections;");
+    const databaseMaxConnections = await database.query(
+      "SHOW max_connections;",
+    );
     const databaseMaxConnectionsValue =
       databaseMaxConnections.rows[0].max_connections;
 
@@ -33,9 +35,9 @@ async function status(req, res) {
   } catch (error) {
     const publicError = new InternalServerError({
       cause: error,
-    })
+    });
 
-    console.log('\n Erro dentro do catch do controller:')
+    console.log("\n Erro dentro do catch do controller:");
     console.error(publicError);
 
     res.status(500).json({ publicError });
