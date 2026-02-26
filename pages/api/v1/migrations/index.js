@@ -6,9 +6,7 @@ import controller from "infra/controller.js";
 
 const router = createRouter();
 
-router
-  .get(getHandler)
-  .post(postHandler);
+router.get(getHandler).post(postHandler);
 
 export default router.handler(controller.errorHandler);
 
@@ -34,7 +32,8 @@ async function postHandler(req, res) {
       ...defaultMigrationOptions(dbClient),
       dryRun: false,
     });
-    if (migratedMigrations.length > 0) return res.status(201).json(migratedMigrations);
+    if (migratedMigrations.length > 0)
+      return res.status(201).json(migratedMigrations);
     return res.status(200).json(migratedMigrations);
   } finally {
     if (dbClient) await dbClient.end();

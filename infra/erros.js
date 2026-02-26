@@ -21,8 +21,7 @@ export class ServiceError extends Error {
   constructor({ cause, message }) {
     super(message || "Um erro interno não esperado ocorreu.");
     this.name = "ServiceError";
-    this.action =
-      "Verifique se o serviço está disponível..";
+    this.action = "Verifique se o serviço está disponível..";
     this.statusCode = 503;
   }
 
@@ -56,4 +55,3 @@ export class MethodNotAllowedError extends Error {
     };
   }
 }
-

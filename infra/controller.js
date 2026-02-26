@@ -8,7 +8,7 @@ function onNoMatchHandler(req, res) {
 function onErrorHandler(err, req, res) {
   const publicError = new InternalServerError({
     statusCode: err.statusCode,
-    cause: err
+    cause: err,
   });
 
   console.error(publicError);
@@ -18,6 +18,6 @@ const controller = {
   errorHandler: {
     onNoMatch: onNoMatchHandler,
     onError: onErrorHandler,
-  }
+  },
 };
 export default controller;
