@@ -28,7 +28,6 @@ async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
 
-
 export default {
   waitForAllServices,
   clearDatabase,
