@@ -7,7 +7,7 @@ function defaultMigrationOptions(dbClient) {
     dbClient,
     dir: resolve("infra", "migrations"),
     direction: "up",
-    log: () => { },
+    log: () => {},
     migrationsTable: "pgmigrations",
   };
 }
