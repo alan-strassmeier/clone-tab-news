@@ -1,4 +1,4 @@
-exports.up = pgm => {
+exports.up = (pgm) => {
   pgm.createTable("users", {
     id: {
       type: "uuid",
@@ -34,4 +34,4 @@ exports.up = pgm => {
   });
 };
 
-exports.down = false
+exports.down = false;
