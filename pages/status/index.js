@@ -1,5 +1,3 @@
-import { up } from "infra/migrations/1769815459110_test-migration";
-import { use } from "react";
 import useSWR from "swr";
 
 async function fetchAPI(key) {
