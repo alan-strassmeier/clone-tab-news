@@ -41,12 +41,18 @@ describe("POST api/v1/users", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       const userInDatabase = await user.findOneByUsername("john_doe");
+
       const isPasswordValid = await password.compare(
         "hashed_password",
         userInDatabase.password_hash,
       );
+      const incorrectPasswordMatch = await password.compare(
+        "incorrect_password",
+        userInDatabase.password_hash,
+      );
 
       expect(isPasswordValid).toBe(true);
+      expect(incorrectPasswordMatch).toBe(false);
     });
 
     test("With duplicated email", async () => {

@@ -32,57 +32,12 @@ async function findOneByUsername(username) {
 }
 
 async function create(userInputValue) {
-  await validadeUniqueEmail(userInputValue.email);
   await validadeUniqueUsername(userInputValue.username);
+  await validadeUniqueEmail(userInputValue.email);
   await hashPasswordInObject(userInputValue);
 
   const newUser = await runInsertQuery(userInputValue);
   return newUser;
-
-  async function validadeUniqueEmail(email) {
-    const result = await database.query({
-      text: `
-    SELECT
-      *
-    FROM
-      users
-    WHERE
-      LOWER(email) = LOWER($1)
-    ;`,
-      values: [email],
-    });
-    if (result.rowCount > 0) {
-      throw new ValidationError({
-        message: "Email ja cadastrado",
-        action: "Tente outro email",
-      });
-    }
-  }
-
-  async function validadeUniqueUsername(username) {
-    const result = await database.query({
-      text: `
-    SELECT
-      *
-    FROM
-      users
-    WHERE
-      LOWER(username) = LOWER($1)
-    ;`,
-      values: [username],
-    });
-    if (result.rowCount > 0) {
-      throw new ValidationError({
-        message: "Username ja cadastrado",
-        action: "Tente outro username",
-      });
-    }
-  }
-
-  async function hashPasswordInObject(userInputValue) {
-    const hashedPassword = await password.hash(userInputValue.password_hash);
-    userInputValue.password_hash = hashedPassword;
-  }
 
   async function runInsertQuery(userInputValue) {
     const result = await database.query({
@@ -104,9 +59,98 @@ async function create(userInputValue) {
   }
 }
 
+async function update(username, userInputValue) {
+  const currentUser = await findOneByUsername(username);
+  if ("username" in userInputValue) {
+    await validadeUniqueUsername(userInputValue.username);
+  }
+  if ("email" in userInputValue) {
+    await validadeUniqueEmail(userInputValue.email);
+  }
+  if ("password_hash" in userInputValue) {
+    await hashPasswordInObject(userInputValue);
+  }
+
+  const userNewValues = { ...currentUser, ...userInputValue };
+
+  const updatedUser = await runUpdateQuery(userNewValues);
+  return updatedUser;
+
+  async function runUpdateQuery(userNewValues) {
+    const result = await database.query({
+      text: `
+    UPDATE
+      users
+    SET
+      username = $2,
+      email = $3,
+      password_hash = $4,
+      updated_at = timezone('UTC', now())
+      WHERE
+        id = $1
+    RETURNING
+     *
+      ;
+      `,
+      values: [
+        userNewValues.id,
+        userNewValues.username,
+        userNewValues.email,
+        userNewValues.password_hash,
+      ],
+    });
+    return result.rows[0];
+  }
+}
+async function validadeUniqueUsername(username) {
+  const result = await database.query({
+    text: `
+    SELECT
+      *
+    FROM
+      users
+    WHERE
+      LOWER(username) = LOWER($1)
+    ;`,
+    values: [username],
+  });
+  if (result.rowCount > 0) {
+    throw new ValidationError({
+      message: "Username ja cadastrado",
+      action: "Tente outro username",
+    });
+  }
+}
+
+async function validadeUniqueEmail(email) {
+  const result = await database.query({
+    text: `
+    SELECT
+      *
+    FROM
+      users
+    WHERE
+      LOWER(email) = LOWER($1)
+    ;`,
+    values: [email],
+  });
+  if (result.rowCount > 0) {
+    throw new ValidationError({
+      message: "Email ja cadastrado",
+      action: "Tente outro email",
+    });
+  }
+}
+
+async function hashPasswordInObject(userInputValue) {
+  const hashedPassword = await password.hash(userInputValue.password_hash);
+  userInputValue.password_hash = hashedPassword;
+}
+
 const user = {
   create,
   findOneByUsername,
+  update,
 };
 
 export default user;
