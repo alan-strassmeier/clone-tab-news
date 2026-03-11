@@ -10,18 +10,9 @@ beforeAll(async () => {
 describe("GET api/v1/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "MesmoCase",
-          email: "MesmoCase.email@example.com",
-          password_hash: "hashed_password",
-        }),
+      await orchestrator.createUser({
+        username: "MesmoCase",
       });
-      expect(response.status).toBe(201);
 
       const response2 = await fetch(
         "http://localhost:3000/api/v1/users/MesmoCase",
@@ -34,7 +25,7 @@ describe("GET api/v1/[username]", () => {
       expect(response2Body).toEqual({
         id: response2Body.id,
         username: "MesmoCase",
-        email: "MesmoCase.email@example.com",
+        email: response2Body.email,
         password_hash: response2Body.password_hash,
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
@@ -46,18 +37,9 @@ describe("GET api/v1/[username]", () => {
     });
 
     test("With case insensitive match", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "DiferenteCase",
-          email: "DiferenteCase.email@example.com",
-          password_hash: "hashed_password",
-        }),
+      await orchestrator.createUser({
+        username: "DiferenteCase",
       });
-      expect(response.status).toBe(201);
 
       const response2 = await fetch(
         "http://localhost:3000/api/v1/users/diferentecase",
@@ -70,7 +52,7 @@ describe("GET api/v1/[username]", () => {
       expect(response2Body).toEqual({
         id: response2Body.id,
         username: "DiferenteCase",
-        email: "DiferenteCase.email@example.com",
+        email: response2Body.email,
         password_hash: response2Body.password_hash,
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
