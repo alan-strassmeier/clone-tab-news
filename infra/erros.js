@@ -76,6 +76,26 @@ export class NotFoundError extends Error {
     };
   }
 }
+
+export class UnautorizedError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Usuario nao autenticado.", {
+      cause,
+    });
+    this.name = "UnautorizedError";
+    this.action = action || "Verifique as credenciais e tente novamente.";
+    this.statusCode = 401;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      statusCode: this.statusCode,
+    };
+  }
+}
 export class MethodNotAllowedError extends Error {
   constructor() {
     super("Metodo não permitido para esse endpoint");
