@@ -1,6 +1,8 @@
 export class InternalServerError extends Error {
   constructor({ cause, statusCode }) {
-    super("Um erro interno não esperado ocorreu.");
+    super("Um erro interno não esperado ocorreu.", {
+      cause,
+    });
     this.name = "InternalServerError";
     this.action =
       "Tente novamente mais tarde. Se o erro persistir, entre em contato com o suporte.";
@@ -63,6 +65,26 @@ export class NotFoundError extends Error {
     this.name = "NotFoundError";
     this.action = action || "Verifique o username e tente novamente";
     this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      statusCode: this.statusCode,
+    };
+  }
+}
+
+export class UnautorizedError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Usuario nao autenticado.", {
+      cause,
+    });
+    this.name = "UnautorizedError";
+    this.action = action || "Verifique as credenciais e tente novamente.";
+    this.statusCode = 401;
   }
 
   toJSON() {

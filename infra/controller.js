@@ -3,6 +3,7 @@ import {
   MethodNotAllowedError,
   ValidationError,
   NotFoundError,
+  UnautorizedError,
 } from "infra/erros.js";
 
 function onNoMatchHandler(req, res) {
@@ -11,12 +12,15 @@ function onNoMatchHandler(req, res) {
 }
 
 function onErrorHandler(err, req, res) {
-  if (err instanceof ValidationError || err instanceof NotFoundError) {
+  if (
+    err instanceof ValidationError ||
+    err instanceof NotFoundError ||
+    err instanceof UnautorizedError
+  ) {
     return res.status(err.statusCode).json(err);
   }
 
   const publicError = new InternalServerError({
-    statusCode: err.statusCode,
     cause: err,
   });
 
