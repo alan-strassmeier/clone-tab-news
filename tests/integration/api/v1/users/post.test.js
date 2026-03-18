@@ -86,7 +86,7 @@ describe("POST api/v1/users", () => {
         name: "ValidationError",
         message: "Email ja cadastrado",
         action: "Tente outro email",
-        status_Code: 400,
+        status_code: 400,
       });
     });
 
@@ -127,7 +127,7 @@ describe("POST api/v1/users", () => {
         name: "ValidationError",
         message: "Username ja cadastrado",
         action: "Tente outro username",
-        status_Code: 400,
+        status_code: 400,
       });
     });
   });

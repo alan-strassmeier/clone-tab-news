@@ -10,8 +10,8 @@ async function proof(providedEmail, providedPasswordHash) {
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       throw new UnauthorizedError({
-        message: "Email ou senha incorretos",
-        action: "Verifique suas credenciais e tente novamente.",
+        message: "Usuário não possui sessão ativa.",
+        action: "Verifique se este usuário está logado e tente novamente.",
       });
     }
     throw error;
@@ -25,8 +25,8 @@ async function proof(providedEmail, providedPasswordHash) {
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw new UnauthorizedError({
-          message: "Email ou senha incorretos",
-          action: "Verifique suas credenciais e tente novamente.",
+          message: "Usuário não possui sessão ativa.",
+          action: "Verifique se este usuário está logado e tente novamente.",
         });
       }
       throw error;
@@ -42,8 +42,8 @@ async function proof(providedEmail, providedPasswordHash) {
     );
     if (!isPasswordValid) {
       throw new UnauthorizedError({
-        message: "Email ou senha incorretos",
-        action: "Verifique suas credenciais e tente novamente.",
+        message: "Usuário não possui sessão ativa.",
+        action: "Verifique se este usuário está logado e tente novamente.",
       });
     }
   }

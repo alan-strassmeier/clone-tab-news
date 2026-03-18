@@ -27,7 +27,7 @@ describe("PATCH api/v1/[username]", () => {
         name: "NotFoundError",
         message: "Usuario nao encontrado",
         action: "Verifique o username e tente novamente",
-        statusCode: 404,
+        status_code: 404,
       });
     });
 
@@ -55,7 +55,7 @@ describe("PATCH api/v1/[username]", () => {
         name: "ValidationError",
         message: "Username ja cadastrado",
         action: "Tente outro username",
-        status_Code: 400,
+        status_code: 400,
       });
     });
 
@@ -86,7 +86,7 @@ describe("PATCH api/v1/[username]", () => {
         name: "ValidationError",
         message: "Email ja cadastrado",
         action: "Tente outro email",
-        status_Code: 400,
+        status_code: 400,
       });
     });
 

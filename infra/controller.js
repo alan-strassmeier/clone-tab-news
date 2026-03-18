@@ -11,7 +11,7 @@ import {
 
 function onNoMatchHandler(req, res) {
   const publicError = new MethodNotAllowedError();
-  res.status(publicError.statusCode).json(publicError);
+  res.status(publicError.status_code).json(publicError);
 }
 
 function onErrorHandler(err, req, res) {
@@ -20,15 +20,11 @@ function onErrorHandler(err, req, res) {
     err instanceof NotFoundError ||
     err instanceof UnauthorizedError
   ) {
-    return res.status(err.statusCode).json(err);
+    return res.status(err.status_code).json(err);
   }
-
-  const publicError = new InternalServerError({
-    cause: err,
-  });
-
+  const publicError = new InternalServerError({ cause: err });
   console.error(publicError);
-  res.status(publicError.statusCode).json({ publicError });
+  res.status(publicError.status_code).json(publicError);
 }
 
 async function setSessionCookie(sessionToken, res) {
@@ -41,11 +37,23 @@ async function setSessionCookie(sessionToken, res) {
   res.setHeader("Set-Cookie", setCookie);
 }
 
+async function clearSessionCookie(response) {
+  const setCookie = cookie.serialize("session_id", "invalid", {
+    path: "/",
+    maxAge: -1,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
+
+  response.setHeader("Set-Cookie", setCookie);
+}
+
 const controller = {
   errorHandler: {
     onNoMatch: onNoMatchHandler,
     onError: onErrorHandler,
   },
   setSessionCookie,
+  clearSessionCookie,
 };
 export default controller;
