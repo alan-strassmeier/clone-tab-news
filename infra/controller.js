@@ -15,13 +15,14 @@ function onNoMatchHandler(req, res) {
 }
 
 function onErrorHandler(err, req, res) {
-  if (
-    err instanceof ValidationError ||
-    err instanceof NotFoundError ||
-    err instanceof UnauthorizedError
-  ) {
+  if (err instanceof ValidationError || err instanceof NotFoundError) {
     return res.status(err.status_code).json(err);
   }
+  if (err instanceof UnauthorizedError) {
+    clearSessionCookie(res);
+    return res.status(err.status_code).json(err);
+  }
+
   const publicError = new InternalServerError({ cause: err });
   console.error(publicError);
   res.status(publicError.status_code).json(publicError);

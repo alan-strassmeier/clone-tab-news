@@ -168,7 +168,6 @@ describe("PATCH api/v1/[username]", () => {
       const newPasswordUser = await orchestrator.createUser({
         password_hash: "hashed_password",
       });
-      console.log(newPasswordUser.username);
 
       const responseUser2 = await fetch(
         `http://localhost:3000/api/v1/users/${newPasswordUser.username}`,
