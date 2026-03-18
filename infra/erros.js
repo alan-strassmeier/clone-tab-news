@@ -77,7 +77,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export class UnautorizedError extends Error {
+export class UnauthorizedError extends Error {
   constructor({ cause, message, action }) {
     super(message || "Usuario nao autenticado.", {
       cause,
