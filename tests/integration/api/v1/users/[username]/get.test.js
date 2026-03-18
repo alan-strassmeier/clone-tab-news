@@ -76,7 +76,7 @@ describe("GET api/v1/[username]", () => {
         name: "NotFoundError",
         message: "Usuario nao encontrado",
         action: "Verifique o username e tente novamente",
-        statusCode: 404,
+        status_code: 404,
       });
     });
   });

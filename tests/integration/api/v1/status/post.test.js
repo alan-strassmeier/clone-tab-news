@@ -14,12 +14,12 @@ describe("POST api/v1/status", () => {
       const responseBody = await response.json();
 
       expect(responseBody).toEqual({
-        name: "Method Not Allowed",
+        name: "MethodNotAllowedError",
         message: "Metodo não permitido para esse endpoint",
         action:
           "Verifique se o metodo HTTP utilizado é permitido para esse endpoint",
         details: "Apenas metodo GET é permitido para esse endpoint",
-        status_Code: 405,
+        status_code: 405,
       });
     });
   });
